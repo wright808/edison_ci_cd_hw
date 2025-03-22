@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Run tests using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn test'
+                    bat 'mvn clean test'
                 }
             }
         }
