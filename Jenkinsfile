@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Sanity')
         {
-            bat 'dir'
+            steps {
+                bat 'dir'
+            }
         }
         stage('Build') {
             steps {
