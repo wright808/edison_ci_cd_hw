@@ -6,10 +6,10 @@ pipeline {
     }
 
     stages {
-        stage('Sanity')
+        stage('Plugins')
         {
             steps {
-                bat 'dir'
+                bat 'mvn install:install-file -Dfile=./plugins/maven-surefire-plugin-2.22.2.jar -DgroupId=org.apache.maven.plugins -DartifactId=maven-surefire-plugin -Dversion=2.22.2 -Dpackaging=jar'
             }
         }
         stage('Build') {
