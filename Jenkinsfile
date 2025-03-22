@@ -15,8 +15,9 @@ pipeline {
         stage('Build') {
             steps {
                 // Build the project using Maven
-                bat 'mvn clean install'
-
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn clean install'
+                }
             }
         }
         stage('Test') {
