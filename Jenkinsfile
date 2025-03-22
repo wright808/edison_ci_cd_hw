@@ -10,7 +10,7 @@ pipeline {
             steps {
                 // Build the project using Maven
                 
-                    bat 'mvn clean install -o'
+                    bat 'mvn clean install'
                 
             }
         }
