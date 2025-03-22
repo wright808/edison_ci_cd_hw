@@ -10,8 +10,7 @@ pipeline {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn install:install-file -Dfile=./plugins/maven-surefire-plugin-2.22.2.jar -DgroupId=org.apache.maven.plugins -DartifactId=maven-surefire-plugin -Dversion=2.22.2 -Dpackaging=jar'
-                    bat 'mvn clean install -o'
+                    bat 'mvn clean install'
                 }
             }
         }
