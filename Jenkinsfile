@@ -16,7 +16,7 @@ pipeline {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean install'
+                    bat 'mvn clean install -o'
                 }
             }
         }
