@@ -23,7 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 // Run tests using Maven
-                withMaven(maven: 'maven-3.9.6') {
+                withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn test'
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
         stage('Package') {
             steps {
                 // Package the application
-                withMaven(maven: 'maven-3.9.6') {
+                withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn package'
                 }
             }
