@@ -12,12 +12,12 @@ public class TestFibonacciTheory
 
 	@DataPoints
 	public static int[] VALUES =
-	{ 0, 1, 2, 3, 45 };
+	{ 0, 1, 2, 3, 45, 506};
 
 	@Theory
 	public void seeds(int n)
 	{
-		//assumeTrue(n <= 1); // ignores values > 1
+		assumeTrue(n <= 1); // ignores values > 1
 		assertEquals(n, Fibonacci.calculate(n));
 	}
 
