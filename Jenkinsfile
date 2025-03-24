@@ -5,6 +5,10 @@ pipeline {
         maven 'maven-3.9.9' // Ensure Maven is available
     }
 
+    environment {
+        IS_PULL_REQUEST = env.BRANCH_NAME.startsWith('PR-')
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -30,11 +34,20 @@ pipeline {
                 }
             }
         }
-
-         stage('Publish Test Results') {
+        stage('Publish Test Results') {
             steps {
                 // Publish JUnit test results
                 junit '**/target/surefire-reports/*.xml'
+            }
+        }
+        stage('Deploy to Staging') {
+            when {
+                expression { return !env.IS_PULL_REQUEST }
+            }
+            steps {
+                // Deploy the application to staging environment
+                echo 'Deploying to staging environment...'
+                // Add your deployment commands here
             }
         }
     }
