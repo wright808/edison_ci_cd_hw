@@ -16,7 +16,7 @@ public class TestFibonacciParametized
   	@Parameters
 	public static List<Object[]> data()
 	{
-		return Arrays.asList(new Object[][] {{0, 0 }, { 1, 1 }, { 2, 5 }, { 3, 5 }, { 4, 5 }, { 45, 1134903170 } });
+		return Arrays.asList(new Object[][] {{0, 0 }, { 1, 1 }, { 2, 1 }, { 3, 2 }, { 4, 3 }, { 45, 1134903170 } });
 	} 
 	
 	public TestFibonacciParametized(int input, int expected)

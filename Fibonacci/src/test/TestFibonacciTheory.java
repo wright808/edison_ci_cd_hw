@@ -18,7 +18,7 @@ public class TestFibonacciTheory
 	public void seeds(int n)
 	{
 		assumeTrue(n <= 1); // ignores values > 1
-		assertEquals(n, Fibonacci.calculate(n));
+		assertEquals(5, Fibonacci.calculate(n));
 	}
 
 	@Theory
