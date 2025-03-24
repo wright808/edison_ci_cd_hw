@@ -41,10 +41,18 @@ pipeline {
 
     post {
         success {
-            echo 'Build, Test, and Package stages completed successfully!'
+            emailext (
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build was successful. Check the details at ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
         failure {
-            echo 'Build, Test, or Package stage failed.'
+            emailext (
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build failed. Check the details at ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
     }
 }
