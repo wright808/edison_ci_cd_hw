@@ -6,10 +6,21 @@ pipeline {
     }
 
     environment {
-        IS_PULL_REQUEST = env.BRANCH_NAME.startsWith('PR-')
+        IS_PULL_REQUEST = '' // Initialize with an empty string
     }
 
     stages {
+        stage('Set Environment Variable') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME.startsWith('PR-')) {
+                        env.IS_PULL_REQUEST = 'true'
+                    } else {
+                        env.IS_PULL_REQUEST = 'false'
+                    }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 // Build the project using Maven
@@ -42,7 +53,7 @@ pipeline {
         }
         stage('Deploy to Staging') {
             when {
-                expression { return !env.IS_PULL_REQUEST }
+                expression { return env.IS_PULL_REQUEST == 'false' }
             }
             steps {
                 // Deploy the application to staging environment
@@ -56,14 +67,14 @@ pipeline {
             emailext (
                 subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "Build was successful. Check the details at ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                to: 'johnathan.thompson@geaerospace.com'
             )
         }
         failure {
             emailext (
                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "Build failed. Check the details at ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                to: 'johnathan.thompson@geaerospace.com'
             )
         }
     }
