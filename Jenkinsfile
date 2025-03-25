@@ -7,10 +7,12 @@ pipeline {
 
     stages {
         stage('Clean') {
+            steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn clean'
                 }
+            }
         }
         stage('Build') {
             steps {
