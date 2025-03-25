@@ -42,14 +42,6 @@ pipeline {
                 junit '**/target/surefire-reports/*.xml'
             }
         }
-        stage('JaCoCo Report') {
-            steps {
-                // Generate JaCoCo report
-                withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn jacoco:report'
-                }
-            }
-        }
         stage('Clover Report') {
             steps {
                 // Generate Clover report
@@ -58,23 +50,16 @@ pipeline {
                 }
             }
         }
-        stage('Coverage Report') {
-            steps {
-                // Publish coverage results using the Coverage plugin
-                publishCoverage adapters: [jacocoAdapter('target/site/jacoco/jacoco.xml')]
-            }
-        }
+
     }
     post {
         success {
             script {
-                def jacocoReport = readFile('target/site/jacoco/index.html')
                 def cloverReport = readFile('target/site/clover/index.html')
                 emailext (
                     subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                     body: """
                         Build was successful. Check the details at ${env.BUILD_URL}
-                        JaCoCo Report: ${jacocoReport}
                         Clover Report: ${cloverReport}
                     """,
                     recipientProviders: [[$class: 'DevelopersRecipientProvider']]
@@ -83,13 +68,11 @@ pipeline {
         }
         failure {
             script {
-                def jacocoReport = readFile('target/site/jacoco/index.html')
                 def cloverReport = readFile('target/site/clover/index.html')
                 emailext (
                     subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                     body: """
                         Build failed. Check the details at ${env.BUILD_URL}
-                        JaCoCo Report: ${jacocoReport}
                         Clover Report: ${cloverReport}
                     """,
                     recipientProviders: [[$class: 'DevelopersRecipientProvider']]
