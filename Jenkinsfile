@@ -24,7 +24,7 @@ pipeline {
             steps {
                 // Setup Clover instrumentation
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clover:setup'
+                    bat 'mvn clean clover:setup'
                 }
             }
         }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 // Generate Clover report
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clover:clover'
+                    bat 'mvn clover:aggregate clover:clover'
                 }
             }
         }
