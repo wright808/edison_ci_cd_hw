@@ -114,7 +114,7 @@ pipeline {
                                 <h3>Changes Since Last Success:</h3>
                                 <pre>${currentBuild.changeSets}</pre>
                                 <h3>Jacoco Report:</h3>
-                                <pre><a href="${env.BUILD_URL}target/site/jacoco/index.html">Jacoco Report</a></pre>
+                                <pre><a href="${env.BUILD_URL}/jacoco">Jacoco Report</a></pre>
                             </body>
                             </html>
                         """,
@@ -166,7 +166,7 @@ pipeline {
                                 <h3>Changes Since Last Success:</h3>
                                 <pre>${currentBuild.changeSets}</pre>
                                 <h3>Jacoco Report:</h3>
-                                <pre><a href="${env.BUILD_URL}target/site/jacoco/index.html">Jacoco Report</a></pre>
+                                <pre><a href="${env.BUILD_URL}/jacoco">Jacoco Report</a></pre>
                             </body>
                             </html>
                         """,
