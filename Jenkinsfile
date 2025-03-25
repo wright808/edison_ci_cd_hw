@@ -6,11 +6,17 @@ pipeline {
     }
 
     stages {
+        stage('Clean') {
+                // Build the project using Maven
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn clean'
+                }
+        }
         stage('Build') {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean compile -Dmaven.test.skip'
+                    bat 'mvn compile -Dmaven.test.skip'
                 }
             }
         }
