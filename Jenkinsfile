@@ -6,22 +6,11 @@ pipeline {
     }
 
     stages {
-        stage('Set Environment Variable') {
-            steps {
-                script {
-                    env.IS_PULL_REQUEST = 'false'
-                    if (env.BRANCH_NAME != null)
-                        if (env.BRANCH_NAME.startsWith('PR-')) {
-                            env.IS_PULL_REQUEST = 'true'
-                        }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean install -Dmaven.test.skip'
+                    bat 'mvn clean compile -Dmaven.test.skip'
                 }
             }
         }
@@ -37,15 +26,15 @@ pipeline {
             steps {
                 // Run tests using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean test'
+                    bat 'mvn test'
                 }
             }
         }
-        stage('Package') {
+        stage('Package and Install') {
             steps {
                 // Package the application
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn package -Dmaven.test.skip'
+                    bat 'mvn install -Dmaven.test.skip'
                 }
             }
         }
