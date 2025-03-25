@@ -78,19 +78,23 @@ pipeline {
                 if (fileExists(coverageReportPath)) {
                     emailext (
                         subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            Build was successful. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: ${env.BUILD_URL}/jacoco
-                        """,
-                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                    )
-                } else {
-                    emailext (
-                        subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            Build was successful. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: Not generated.
-                        """,
+                    body: """
+                        <html>
+                        <body>
+                            <h2>Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
+                            <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
+                            <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                            <h3>Test Results:</h3>
+                            <pre>${currentBuild.result}</pre>
+                            <h3>Failed Tests:</h3>
+                            <pre>${currentBuild.result}</pre>
+                            <h3>Changes Since Last Success:</h3>
+                            <pre>${currentBuild.changeSets}</pre>
+                            <h3>Jacoco Report:</h3>
+                            <pre>${cloverReport}</pre>
+                        </body>
+                        </html>
+                    """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
@@ -102,19 +106,23 @@ pipeline {
                 if (fileExists(coverageReportPath)) {
                     emailext (
                         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            Build failed. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: ${env.BUILD_URL}/jacoco
-                        """,
-                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                    )
-                } else {
-                    emailext (
-                        subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                        body: """
-                            Build failed. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: Not generated.
-                        """,
+                    body: """
+                        <html>
+                        <body>
+                            <h2>Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
+                            <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
+                            <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                            <h3>Test Results:</h3>
+                            <pre>${currentBuild.result}</pre>
+                            <h3>Failed Tests:</h3>
+                            <pre>${currentBuild.result}</pre>
+                            <h3>Changes Since Last Success:</h3>
+                            <pre>${currentBuild.changeSets}</pre>
+                            <h3>Jacoco Report:</h3>
+                            <pre>${env.BUILD_URL}/jacoco</pre>
+                        </body>
+                        </html>
+                    """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
