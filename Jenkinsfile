@@ -1,17 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Set Environment Variable') {
-            steps {
-                script {
-                    env.IS_PULL_REQUEST = 'false'
-                    if (env.BRANCH_NAME != null)
-                        if (env.BRANCH_NAME.startsWith('PR-')) {
-                            env.IS_PULL_REQUEST = 'true'
-                        }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 // Build the project using Maven
