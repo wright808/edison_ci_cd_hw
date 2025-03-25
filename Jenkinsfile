@@ -6,22 +6,11 @@ pipeline {
     }
 
     stages {
-        stage('Set Environment Variable') {
-            steps {
-                script {
-                    env.IS_PULL_REQUEST = 'false'
-                    if (env.BRANCH_NAME != null)
-                        if (env.BRANCH_NAME.startsWith('PR-')) {
-                            env.IS_PULL_REQUEST = 'true'
-                        }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean install -Dmaven.test.skip'
+                    bat 'mvn clean compile -Dmaven.test.skip'
                 }
             }
         }
@@ -37,15 +26,23 @@ pipeline {
             steps {
                 // Run tests using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean test'
+                    bat 'mvn test'
                 }
             }
         }
-        stage('Package') {
+        stage('Package and Install') {
             steps {
                 // Package the application
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn package -Dmaven.test.skip'
+                    bat 'mvn install -Dmaven.test.skip'
+                }
+            }
+        }
+        stage('Static Analysis') {
+            steps {
+                // Run Checkstyle static analysis
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn checkstyle:checkstyle'
                 }
             }
         }
@@ -53,6 +50,12 @@ pipeline {
             steps {
                 // Publish JUnit test results
                 junit '**/target/surefire-reports/*.xml'
+            }
+        }
+        stage('Publish Checkstyle Results') {
+            steps {
+                // Publish Checkstyle results using Warnings Next Generation Plugin
+                recordIssues tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')]
             }
         }
         stage('Clover Report') {
@@ -63,16 +66,12 @@ pipeline {
                 }
             }
         }
-        stage('Report') {
+        stage('Publish Checks') {
             steps {
-                clover(cloverReportDir: 'target/site', cloverReportFileName: 'clover.xml',
-                // optional, default is: method=70, conditional=80, statement=80
-                healthyTarget: [methodCoverage: 70, conditionalCoverage: 80, statementCoverage: 80],
-                // optional, default is none
-                unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
-                // optional, default is none
-                failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
-                )
+                publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
+                    text: 'you can publish checks in pipeline script',
+                    detailsURL: 'https://github.com/jenkinsci/checks-api-plugin#pipeline-usage',
+                    actions: [[label: 'an-user-request-action', description: 'actions allow users to request pre-defined behaviours', identifier: 'example-action']]
             }
         }
     }
