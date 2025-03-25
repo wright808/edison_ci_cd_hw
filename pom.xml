@@ -65,7 +65,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <phase>site</phase>
                         <goals>
                             <goal>clover</goal>
                         </goals>
