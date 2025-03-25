@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    triggers {
+        githubPush()
+    }
     tools {
         maven 'maven-3.9.9' // Ensure Maven is available
     }
