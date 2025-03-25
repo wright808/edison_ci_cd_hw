@@ -72,21 +72,6 @@ pipeline {
         }
     }
     post {
-        always {
-            script {
-                def coverageReportPath = 'target/site/jacoco/index.html'
-                if (fileExists(coverageReportPath)) {
-                    publishHTML([
-                        reportName: 'JaCoCo Coverage Report',
-                        reportDir: 'target/site/jacoco',
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true,
-                        allowMissing: false
-                    ])
-                }
-            }
-        }
         success {
             script {
                 def coverageReportPath = 'target/site/jacoco/index.html'
@@ -95,7 +80,7 @@ pipeline {
                         subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
                             Build was successful. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: ${env.BUILD_URL}target/site/jacoco/index.html
+                            JaCoCo Coverage Report: ${env.BUILD_URL}/jacoco
                         """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
@@ -119,7 +104,7 @@ pipeline {
                         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
                             Build failed. Check the details at ${env.BUILD_URL}
-                            JaCoCo Coverage Report: ${env.BUILD_URL}target/site/jacoco/index.html
+                            JaCoCo Coverage Report: ${env.BUILD_URL}/jacoco
                         """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
