@@ -118,6 +118,7 @@ pipeline {
                             </body>
                             </html>
                         """,
+                        mimeType: 'text/html',
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
@@ -169,6 +170,7 @@ pipeline {
                             </body>
                             </html>
                         """,
+                        mimeType: 'text/html',
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
