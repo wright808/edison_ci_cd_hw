@@ -1,14 +1,5 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'maven-3.9.9' // Ensure Maven is available
-    }
-
-    environment {
-        IS_PULL_REQUEST = '' // Initialize with an empty string
-    }
-
     stages {
         stage('Set Environment Variable') {
             steps {
@@ -65,6 +56,12 @@ pipeline {
                 withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn clover:clover'
                 }
+            }
+        }
+        stage('Coverage Report') {
+            steps {
+                // Publish coverage results using the Coverage plugin
+                publishCoverage adapters: [jacocoAdapter('target/site/jacoco/jacoco.xml')]
             }
         }
     }
