@@ -29,6 +29,7 @@ pipeline {
             steps {
                 // Run tests using Maven
                 withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn clover:setup'
                     bat 'mvn clean test'
                 }
             }
@@ -55,33 +56,56 @@ pipeline {
                 }
             }
         }
-
     }
     post {
         success {
             script {
-                def cloverReport = readFile('target/site/clover/index.html')
-                emailext (
-                    subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        Build was successful. Check the details at ${env.BUILD_URL}
-                        Clover Report: ${cloverReport}
-                    """,
-                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                )
+                def cloverReportPath = 'target/site/clover/index.html'
+                if (fileExists(cloverReportPath)) {
+                    def cloverReport = readFile(cloverReportPath)
+                    emailext (
+                        subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+                            Build was successful. Check the details at ${env.BUILD_URL}
+                            Clover Report: ${cloverReport}
+                        """,
+                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                    )
+                } else {
+                    emailext (
+                        subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+                            Build was successful. Check the details at ${env.BUILD_URL}
+                            Clover Report: Not generated.
+                        """,
+                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                    )
+                }
             }
         }
         failure {
             script {
-                def cloverReport = readFile('target/site/clover/index.html')
-                emailext (
-                    subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        Build failed. Check the details at ${env.BUILD_URL}
-                        Clover Report: ${cloverReport}
-                    """,
-                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                )
+                def cloverReportPath = 'target/site/clover/index.html'
+                if (fileExists(cloverReportPath)) {
+                    def cloverReport = readFile(cloverReportPath)
+                    emailext (
+                        subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+                            Build failed. Check the details at ${env.BUILD_URL}
+                            Clover Report: ${cloverReport}
+                        """,
+                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                    )
+                } else {
+                    emailext (
+                        subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+                            Build failed. Check the details at ${env.BUILD_URL}
+                            Clover Report: Not generated.
+                        """,
+                        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                    )
+                }
             }
         }
     }
