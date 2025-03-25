@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                // Build the project using Maven
+                // Clean the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn clean'
                 }
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 // Build the project using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn compile -Dmaven.test.skip'
+                    bat 'mvn compile'
                 }
             }
         }
@@ -26,13 +26,13 @@ pipeline {
             steps {
                 // Setup Clover instrumentation
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clean clover:setup'
+                    bat 'mvn clover:setup'
                 }
             }
         }
         stage('Test') {
             steps {
-                // Run tests using Maven
+                // Run tests using Maven with Clover instrumentation
                 withMaven(maven: 'maven-3.9.9') {
                     bat 'mvn test'
                 }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 // Package the application
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn install -Dmaven.test.skip'
+                    bat 'mvn install'
                 }
             }
         }
