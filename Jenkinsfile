@@ -78,23 +78,46 @@ pipeline {
                 if (fileExists(coverageReportPath)) {
                     emailext (
                         subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        <html>
-                        <body>
-                            <h2>Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
-                            <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
-                            <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                            <h3>Test Results:</h3>
-                            <pre>${currentBuild.result}</pre>
-                            <h3>Failed Tests:</h3>
-                            <pre>${currentBuild.result}</pre>
-                            <h3>Changes Since Last Success:</h3>
-                            <pre>${currentBuild.changeSets}</pre>
-                            <h3>Jacoco Report:</h3>
-                            <pre>${cloverReport}</pre>
-                        </body>
-                        </html>
-                    """,
+                        body: """
+                            <html>
+                            <head>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        margin: 20px;
+                                    }
+                                    h2 {
+                                        color: #4CAF50;
+                                    }
+                                    p {
+                                        font-size: 14px;
+                                    }
+                                    pre {
+                                        background-color: #f4f4f4;
+                                        border: 1px solid #ddd;
+                                        padding: 10px;
+                                        font-size: 14px;
+                                    }
+                                    a {
+                                        color: #1E90FF;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h2>Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
+                                <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
+                                <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                                <h3>Test Results:</h3>
+                                <pre>${currentBuild.result}</pre>
+                                <h3>Failed Tests:</h3>
+                                <pre>${currentBuild.result}</pre>
+                                <h3>Changes Since Last Success:</h3>
+                                <pre>${currentBuild.changeSets}</pre>
+                                <h3>Jacoco Report:</h3>
+                                <pre><a href="${env.BUILD_URL}target/site/jacoco/index.html">Jacoco Report</a></pre>
+                            </body>
+                            </html>
+                        """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
@@ -106,23 +129,46 @@ pipeline {
                 if (fileExists(coverageReportPath)) {
                     emailext (
                         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        <html>
-                        <body>
-                            <h2>Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
-                            <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
-                            <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                            <h3>Test Results:</h3>
-                            <pre>${currentBuild.result}</pre>
-                            <h3>Failed Tests:</h3>
-                            <pre>${currentBuild.result}</pre>
-                            <h3>Changes Since Last Success:</h3>
-                            <pre>${currentBuild.changeSets}</pre>
-                            <h3>Jacoco Report:</h3>
-                            <pre>${env.BUILD_URL}/jacoco</pre>
-                        </body>
-                        </html>
-                    """,
+                                            body: """
+                            <html>
+                            <head>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        margin: 20px;
+                                    }
+                                    h2 {
+                                        color: #4CAF50;
+                                    }
+                                    p {
+                                        font-size: 14px;
+                                    }
+                                    pre {
+                                        background-color: #f4f4f4;
+                                        border: 1px solid #ddd;
+                                        padding: 10px;
+                                        font-size: 14px;
+                                    }
+                                    a {
+                                        color: #1E90FF;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h2>Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}</h2>
+                                <p><strong>Project:</strong> ${env.PROJECT_NAME}</p>
+                                <p><strong>Build URL:</strong> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                                <h3>Test Results:</h3>
+                                <pre>${currentBuild.result}</pre>
+                                <h3>Failed Tests:</h3>
+                                <pre>${currentBuild.result}</pre>
+                                <h3>Changes Since Last Success:</h3>
+                                <pre>${currentBuild.changeSets}</pre>
+                                <h3>Jacoco Report:</h3>
+                                <pre><a href="${env.BUILD_URL}target/site/jacoco/index.html">Jacoco Report</a></pre>
+                            </body>
+                            </html>
+                        """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
                 }
