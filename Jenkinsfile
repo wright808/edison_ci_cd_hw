@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    tools {
+        maven 'maven-3.9.9' // Ensure Maven is available
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -25,48 +30,29 @@ pipeline {
                 }
             }
         }
-        stage('Publish Test Results') {
+
+         stage('Publish Test Results') {
             steps {
                 // Publish JUnit test results
                 junit '**/target/surefire-reports/*.xml'
             }
         }
-        stage('Clover Report') {
-            steps {
-                // Generate Clover report
-                withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clover:clover'
-                }
-            }
-        }
-
     }
+
     post {
         success {
-            script {
-                def cloverReport = readFile('target/site/clover/index.html')
-                emailext (
-                    subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        Build was successful. Check the details at ${env.BUILD_URL}
-                        Clover Report: ${cloverReport}
-                    """,
-                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                )
-            }
+            emailext (
+                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build was successful. Check the details at ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
         failure {
-            script {
-                def cloverReport = readFile('target/site/clover/index.html')
-                emailext (
-                    subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: """
-                        Build failed. Check the details at ${env.BUILD_URL}
-                        Clover Report: ${cloverReport}
-                    """,
-                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                )
-            }
+            emailext (
+                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build failed. Check the details at ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
         }
     }
 }
