@@ -88,12 +88,11 @@ pipeline {
             script {
                 def cloverReportPath = 'target/site/clover/index.html'
                 if (fileExists(cloverReportPath)) {
-                    def cloverReport = readFile(cloverReportPath)
                     emailext (
                         subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
                             Build was successful. Check the details at ${env.BUILD_URL}
-                            Clover Report: ${cloverReport}
+                            Clover Report: ${env.BUILD_URL}target/site/clover/index.html
                         """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
@@ -113,12 +112,11 @@ pipeline {
             script {
                 def cloverReportPath = 'target/site/clover/index.html'
                 if (fileExists(cloverReportPath)) {
-                    def cloverReport = readFile(cloverReportPath)
                     emailext (
                         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
                             Build failed. Check the details at ${env.BUILD_URL}
-                            Clover Report: ${cloverReport}
+                            Clover Report: ${env.BUILD_URL}target/site/clover/index.html
                         """,
                         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
                     )
