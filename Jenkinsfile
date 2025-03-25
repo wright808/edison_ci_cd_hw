@@ -66,7 +66,7 @@ pipeline {
                 recordIssues tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')]
             }
         }
-        stage('Clover Report') {
+        stage('Generate Clover Report') {
             steps {
                 // Generate Clover report
                 withMaven(maven: 'maven-3.9.9') {
@@ -74,16 +74,23 @@ pipeline {
                 }
             }
         }
-        stage('Publish Checks') {
-            steps {
-                publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
-                    text: 'you can publish checks in pipeline script',
-                    detailsURL: 'https://github.com/jenkinsci/checks-api-plugin#pipeline-usage',
-                    actions: [[label: 'an-user-request-action', description: 'actions allow users to request pre-defined behaviours', identifier: 'example-action']]
-            }
-        }
     }
     post {
+        always {
+            script {
+                def cloverReportPath = 'target/site/clover/index.html'
+                if (fileExists(cloverReportPath)) {
+                    publishHTML([
+                        reportName: 'Clover Coverage Report',
+                        reportDir: 'target/site/clover',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: false
+                    ])
+                }
+            }
+        }
         success {
             script {
                 def cloverReportPath = 'target/site/clover/index.html'
