@@ -51,32 +51,53 @@ pipeline {
                 junit '**/target/surefire-reports/*.xml'
             }
         }
-        stage('Deploy to Staging') {
-            when {
-                expression { return env.IS_PULL_REQUEST == 'false' }
-            }
+        stage('JaCoCo Report') {
             steps {
-                // Deploy the application to staging environment
-                echo 'Deploying to staging environment...'
-                // Add your deployment commands here
+                // Generate JaCoCo report
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn jacoco:report'
+                }
+            }
+        }
+        stage('Clover Report') {
+            steps {
+                // Generate Clover report
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn clover:clover'
+                }
             }
         }
     }
     post {
         success {
-            emailext (
-                subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build was successful. Check the details at ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-            )
+            script {
+                def jacocoReport = readFile('target/site/jacoco/index.html')
+                def cloverReport = readFile('target/site/clover/index.html')
+                emailext (
+                    subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: """
+                        Build was successful. Check the details at ${env.BUILD_URL}
+                        JaCoCo Report: ${jacocoReport}
+                        Clover Report: ${cloverReport}
+                    """,
+                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                )
+            }
         }
         failure {
-            emailext (
-                subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build failed. Check the details at ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-            )
+            script {
+                def jacocoReport = readFile('target/site/jacoco/index.html')
+                def cloverReport = readFile('target/site/clover/index.html')
+                emailext (
+                    subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: """
+                        Build failed. Check the details at ${env.BUILD_URL}
+                        JaCoCo Report: ${jacocoReport}
+                        Clover Report: ${cloverReport}
+                    """,
+                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+                )
+            }
         }
     }
-    
 }
