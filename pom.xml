@@ -43,6 +43,7 @@
                 <configuration>
                     <generateHtml>true</generateHtml>
                     <generateXml>true</generateXml>
+                    <cloverDatabase>target/clover/clover.db</cloverDatabase>
                 </configuration>
                 <executions>
                     <execution>

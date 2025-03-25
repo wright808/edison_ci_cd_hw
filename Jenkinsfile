@@ -25,11 +25,18 @@ pipeline {
                 }
             }
         }
+        stage('Clover Setup') {
+            steps {
+                // Setup Clover instrumentation
+                withMaven(maven: 'maven-3.9.9') {
+                    bat 'mvn clover:setup'
+                }
+            }
+        }
         stage('Test') {
             steps {
                 // Run tests using Maven
                 withMaven(maven: 'maven-3.9.9') {
-                    bat 'mvn clover:setup'
                     bat 'mvn clean test'
                 }
             }
@@ -67,7 +74,7 @@ pipeline {
                 failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
                 )
             }
-        }        
+        }
     }
     post {
         success {
