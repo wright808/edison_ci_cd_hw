@@ -20,7 +20,7 @@
     </dependencies>
     <build>
         <sourceDirectory>Fibonacci/src/main</sourceDirectory>
-        <testSourceDirectory>Fibonacci/src/test</testsourceDirectory>
+        <testSourceDirectory>Fibonacci/src/test</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
