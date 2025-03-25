@@ -47,7 +47,7 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
+                        <id>jacoco-report</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
@@ -65,12 +65,14 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>clover-instrument</id>
                         <phase>pre-site</phase>
                         <goals>
                             <goal>instrument</goal>
                         </goals>
                     </execution>
                     <execution>
+                        <id>clover-report</id>
                         <phase>site</phase>
                         <goals>
                             <goal>clover</goal>
